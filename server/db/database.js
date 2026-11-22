@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 
+// Determine storage directory: /tmp on Vercel/serverless (read-only filesystem elsewhere), ./data locally
 const isVercel = !!process.env.VERCEL;
 const dataDir = isVercel
   ? path.join('/tmp', 'leadflow_data')
@@ -15,174 +16,125 @@ if (!fs.existsSync(dataDir)) {
   }
 }
 
-const dbPath = path.join(dataDir, 'leadflow.db');
+const storePath = path.join(dataDir, 'leadflow_store.json');
 
-let db = null;
-let useJsonFallback = false;
-let jsonStorePath = path.join(dataDir, 'leadflow_fallback.json');
-
-try {
-  const Database = require('better-sqlite3');
-  db = new Database(dbPath);
-  db.pragma('journal_mode = WAL');
-
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS leads (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      created_at TEXT NOT NULL,
-      full_name TEXT NOT NULL,
-      email TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      company TEXT,
-      service TEXT NOT NULL,
-      budget TEXT NOT NULL,
-      project_details TEXT,
-      preferred_contact TEXT DEFAULT 'WhatsApp',
-      consent_given INTEGER DEFAULT 1,
-      consent_timestamp TEXT,
-      source_page TEXT,
-      utm_source TEXT,
-      utm_medium TEXT,
-      utm_campaign TEXT,
-      utm_term TEXT,
-      utm_content TEXT,
-      referrer TEXT,
-      ip_address TEXT,
-      status TEXT DEFAULT 'new',
-      notes TEXT
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at);
-    CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
-    CREATE INDEX IF NOT EXISTS idx_leads_phone ON leads(phone);
-
-    CREATE TABLE IF NOT EXISTS admin_users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      created_at TEXT NOT NULL
-    );
-  `);
-
-  const adminCount = db.prepare('SELECT COUNT(*) as count FROM admin_users').get().count;
-  if (adminCount === 0) {
+// Initialize store file if it does not exist
+function initStore() {
+  if (!fs.existsSync(storePath)) {
     const defaultUser = process.env.ADMIN_USERNAME || 'admin';
     const defaultPassword = process.env.ADMIN_PASSWORD || 'LeadFlow@2026!';
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(defaultPassword, salt);
-    const now = new Date().toISOString();
-    db.prepare('INSERT INTO admin_users (username, password_hash, created_at) VALUES (?, ?, ?)')
-      .run(defaultUser, hash, now);
-    console.log(`[Database] Initialized default admin user: '${defaultUser}'`);
-  }
-} catch (err) {
-  console.warn('[Database] SQLite native initialization fallback to JSON store:', err.message);
-  useJsonFallback = true;
-}
-
-// JSON fallback helpers if SQLite cannot be loaded in serverless
-function readJsonStore() {
-  if (!fs.existsSync(jsonStorePath)) {
-    const defaultUser = process.env.ADMIN_USERNAME || 'admin';
-    const defaultPassword = process.env.ADMIN_PASSWORD || 'LeadFlow@2026!';
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(defaultPassword, salt);
-    return {
+    const initialData = {
       leads: [],
-      admin_users: [{ id: 1, username: defaultUser, password_hash: hash, created_at: new Date().toISOString() }],
+      admin_users: [
+        {
+          id: 1,
+          username: defaultUser,
+          password_hash: hash,
+          created_at: new Date().toISOString()
+        }
+      ],
       nextLeadId: 1
     };
+    try {
+      fs.writeFileSync(storePath, JSON.stringify(initialData, null, 2), 'utf8');
+      console.log(`[Database] Initialized storage engine with default admin: '${defaultUser}'`);
+    } catch (e) {
+      console.error('[Database] Failed to write initial store:', e.message);
+    }
   }
+}
+
+initStore();
+
+function readStore() {
   try {
-    return JSON.parse(fs.readFileSync(jsonStorePath, 'utf8'));
-  } catch (e) {
+    if (!fs.existsSync(storePath)) {
+      initStore();
+    }
+    const raw = fs.readFileSync(storePath, 'utf8');
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error('[Database] Read error, resetting fallback:', err.message);
     return { leads: [], admin_users: [], nextLeadId: 1 };
   }
 }
 
-function writeJsonStore(data) {
+function writeStore(data) {
   try {
-    fs.writeFileSync(jsonStorePath, JSON.stringify(data, null, 2), 'utf8');
-  } catch (e) {
-    console.error('[Database:JSON] Write error:', e.message);
+    fs.writeFileSync(storePath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    console.error('[Database] Write error:', err.message);
   }
 }
 
 module.exports = {
-  db,
-
+  // Insert a new lead
   createLead: (lead) => {
-    if (!useJsonFallback && db) {
-      const stmt = db.prepare(`
-        INSERT INTO leads (
-          created_at, full_name, email, phone, company, service, budget,
-          project_details, preferred_contact, consent_given, consent_timestamp,
-          source_page, utm_source, utm_medium, utm_campaign, utm_term,
-          utm_content, referrer, ip_address, status
-        ) VALUES (
-          @created_at, @full_name, @email, @phone, @company, @service, @budget,
-          @project_details, @preferred_contact, @consent_given, @consent_timestamp,
-          @source_page, @utm_source, @utm_medium, @utm_campaign, @utm_term,
-          @utm_content, @referrer, @ip_address, 'new'
-        )
-      `);
-      const result = stmt.run(lead);
-      return result.lastInsertRowid;
-    } else {
-      const store = readJsonStore();
-      const newLead = { ...lead, id: store.nextLeadId++, status: 'new' };
-      store.leads.push(newLead);
-      writeJsonStore(store);
-      return newLead.id;
-    }
+    const store = readStore();
+    const id = store.nextLeadId++;
+    const newLead = {
+      id,
+      created_at: lead.created_at || new Date().toISOString(),
+      full_name: lead.full_name,
+      email: lead.email,
+      phone: lead.phone,
+      company: lead.company || '',
+      service: lead.service,
+      budget: lead.budget,
+      project_details: lead.project_details || '',
+      preferred_contact: lead.preferred_contact || 'WhatsApp',
+      consent_given: lead.consent_given !== undefined ? lead.consent_given : 1,
+      consent_timestamp: lead.consent_timestamp || new Date().toISOString(),
+      source_page: lead.source_page || '/',
+      utm_source: lead.utm_source || '',
+      utm_medium: lead.utm_medium || '',
+      utm_campaign: lead.utm_campaign || '',
+      utm_term: lead.utm_term || '',
+      utm_content: lead.utm_content || '',
+      referrer: lead.referrer || '',
+      ip_address: lead.ip_address || '',
+      status: 'new',
+      notes: ''
+    };
+    store.leads.push(newLead);
+    writeStore(store);
+    return id;
   },
 
+  // Retrieve leads with optional status filter
   getLeads: (statusFilter) => {
-    if (!useJsonFallback && db) {
-      if (statusFilter && statusFilter !== 'all') {
-        return db.prepare('SELECT * FROM leads WHERE status = ? ORDER BY created_at DESC').all(statusFilter);
-      }
-      return db.prepare('SELECT * FROM leads ORDER BY created_at DESC').all();
-    } else {
-      const store = readJsonStore();
-      let leads = store.leads.slice().reverse();
-      if (statusFilter && statusFilter !== 'all') {
-        leads = leads.filter(l => l.status === statusFilter);
-      }
-      return leads;
+    const store = readStore();
+    let list = store.leads.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    if (statusFilter && statusFilter !== 'all') {
+      list = list.filter(l => l.status === statusFilter);
     }
+    return list;
   },
 
+  // Retrieve single lead
   getLeadById: (id) => {
-    if (!useJsonFallback && db) {
-      return db.prepare('SELECT * FROM leads WHERE id = ?').get(id);
-    } else {
-      const store = readJsonStore();
-      return store.leads.find(l => String(l.id) === String(id));
-    }
+    const store = readStore();
+    return store.leads.find(l => String(l.id) === String(id));
   },
 
+  // Update lead status and notes
   updateLeadStatus: (id, status, notes) => {
-    if (!useJsonFallback && db) {
-      return db.prepare('UPDATE leads SET status = ?, notes = ? WHERE id = ?').run(status, notes || '', id);
-    } else {
-      const store = readJsonStore();
-      const lead = store.leads.find(l => String(l.id) === String(id));
-      if (lead) {
-        lead.status = status;
-        lead.notes = notes || '';
-        writeJsonStore(store);
-      }
+    const store = readStore();
+    const lead = store.leads.find(l => String(l.id) === String(id));
+    if (lead) {
+      lead.status = status;
+      if (notes !== undefined) lead.notes = notes;
+      writeStore(store);
       return { changes: 1 };
     }
+    return { changes: 0 };
   },
 
+  // Get admin user
   getAdminByUsername: (username) => {
-    if (!useJsonFallback && db) {
-      return db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
-    } else {
-      const store = readJsonStore();
-      return store.admin_users.find(u => u.username === username);
-    }
+    const store = readStore();
+    return store.admin_users.find(u => u.username === username);
   }
 };
