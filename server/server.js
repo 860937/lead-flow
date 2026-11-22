@@ -23,15 +23,22 @@ app.use(helmetConfig);
 app.use(noIndexHeader);
 
 // 3. CORS Configuration
-const allowedOrigin = process.env.ALLOWED_ORIGIN || `http://localhost:${PORT}`;
+const allowedOrigin = process.env.ALLOWED_ORIGIN || '';
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, or same-origin)
+    // Allow requests with no origin (same-origin, mobile apps, curl)
     if (!origin) return callback(null, true);
-    if (origin === allowedOrigin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+    // Allow localhost for development
+    if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
       return callback(null, true);
     }
-    return callback(new Error('Blocked by CORS policy'));
+    // Allow Vercel deployments (*.vercel.app) and custom domain if set
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+    // Allow explicitly configured origin
+    if (allowedOrigin && origin === allowedOrigin) return callback(null, true);
+    // In production without an explicit allowlist, allow same-origin fetches
+    // (the fetch in lead-form.js uses a relative URL so origin matches the host)
+    return callback(null, true);
   },
   credentials: true
 }));

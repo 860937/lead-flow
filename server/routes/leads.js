@@ -128,7 +128,11 @@ router.post('/leads', leadLimiter, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('[LeadRoute] Server error processing lead:', error);
+    console.error('[LeadRoute] Server error processing lead:', {
+      message: error.message,
+      stack: error.stack,
+      body: req.body
+    });
     return res.status(500).json({
       success: false,
       message: 'An error occurred while submitting your request. Please try again or reach out directly on WhatsApp (+91 76048 94572).'
