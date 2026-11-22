@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | Lead Flow Coimbatore</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="admin-body">
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <a href="/" class="brand-logo" style="justify-content: center; margin-bottom: 12px;">
+          <img src="/assets/logo.svg" alt="Lead Flow Logo" width="160" height="34">
+        </a>
+        <h2>Agency Portal Login</h2>
+        <p>Access and manage incoming client leads securely.</p>
+      </div>
+
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" required autocomplete="username" autofocus>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" required autocomplete="current-password">
+        </div>
+
+        <div id="login-feedback" class="form-feedback"></div>
+
+        <button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          Log In to Dashboard
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>Lead Flow • Protected by JWT, Rate-Limiting & CSRF Controls</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin/login.js"></script>
+</body>
+</html>

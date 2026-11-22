@@ -1,0 +1,154 @@
+{
+  "currency": "INR",
+  "currencySymbol": "₹",
+  "launchNotice": "Prices are for a limited launch period and may increase for new clients.",
+  "disclaimer": "All prices are 'Starting from' and exclude GST (18%), custom domain registration, cloud hosting, and third-party API/plugin fees.",
+  "packages": [
+    {
+      "id": "starter",
+      "name": "Starter",
+      "popular": false,
+      "launchOffer": true,
+      "price": 5000,
+      "originalPrice": 8000,
+      "priceDisplay": "₹5,000",
+      "originalPriceDisplay": "₹8,000",
+      "period": "one-time",
+      "deliveryTime": "5-7 business days",
+      "revisions": "1 round of revisions",
+      "idealFor": "Solopreneurs, small clinics, consultants, and single-product landing pages",
+      "features": [
+        "Single-Page Website or High-Converting Landing Page",
+        "100% Mobile & Tablet Responsive",
+        "Interactive Contact & Lead Generation Form",
+        "Direct Click-to-WhatsApp Chat Button",
+        "Basic On-Page SEO (Meta tags, H1, Alt tags)",
+        "Ultra-Fast Loading (< 1.5s load time)",
+        "Social Media & Google Map Links",
+        "1 Round of Design & Content Revisions",
+        "Delivery in 5-7 Business Days"
+      ],
+      "notIncluded": [
+        "Multiple subpages (available as add-on)",
+        "Blog CMS system",
+        "Custom portal login"
+      ]
+    },
+    {
+      "id": "business",
+      "name": "Business",
+      "popular": true,
+      "launchOffer": true,
+      "price": 7500,
+      "originalPrice": 12000,
+      "priceDisplay": "₹7,500",
+      "originalPriceDisplay": "₹12,000",
+      "period": "one-time",
+      "deliveryTime": "7-10 business days",
+      "revisions": "2 rounds of revisions",
+      "idealFor": "Small & Medium Businesses, Coimbatore manufacturers, textile firms, local retailers",
+      "features": [
+        "Up to 5 Custom-Designed Clean Pages",
+        "Mobile-First Responsive Across All Screen Sizes",
+        "Secure Lead Form with Instant Email Notifications",
+        "Embedded Interactive Google Map for Local Coimbatore Presence",
+        "Foundational SEO & Google Business Profile (GBP) Guidance",
+        "Direct Click-to-WhatsApp & Call Integration",
+        "Social Media Profile Integrations",
+        "Basic Speed Optimization & Semantic HTML5 Structure",
+        "2 Rounds of Revisions",
+        "Delivery in 7-10 Business Days"
+      ],
+      "notIncluded": [
+        "Full dynamic blog CMS",
+        "Online payment gateway checkout"
+      ]
+    },
+    {
+      "id": "growth",
+      "name": "Growth",
+      "popular": false,
+      "launchOffer": true,
+      "price": 10000,
+      "originalPrice": 18000,
+      "priceDisplay": "₹10,000",
+      "originalPriceDisplay": "₹18,000",
+      "period": "one-time",
+      "deliveryTime": "10-14 business days",
+      "revisions": "3 rounds of revisions",
+      "idealFor": "Established businesses, growing startups, schools, clinics, and regional brands",
+      "features": [
+        "Up to 8 Custom High-Performance Pages",
+        "Everything in Business Plan Included",
+        "Dynamic Blog Setup (Ready for Content Marketing & SEO)",
+        "Advanced Core Web Vitals & Speed Optimization",
+        "Google Analytics 4 (GA4) & Search Console Integration",
+        "SSL Certificate & Security Hardening (CSP, Anti-Spam)",
+        "XML Sitemap & Local Search Engine Submissions",
+        "30 Days of Free Post-Launch Technical Support",
+        "3 Rounds of Comprehensive Revisions",
+        "Delivery in 10-14 Business Days"
+      ],
+      "notIncluded": [
+        "Custom SaaS backend database development (priced separately)"
+      ]
+    }
+  ],
+  "customServices": [
+    {
+      "id": "ecommerce",
+      "name": "E-Commerce Store",
+      "priceDisplay": "Custom Quote",
+      "idealFor": "Retailers, textile manufacturers, apparel brands selling online",
+      "description": "Product catalog, shopping cart, Razorpay / Cashfree / Stripe payment gateway, shipping integration, and admin order management."
+    },
+    {
+      "id": "webapp",
+      "name": "Custom Web Application / SaaS",
+      "priceDisplay": "Custom Quote",
+      "idealFor": "Startups, ERP/CRM portals, industrial workflow tools",
+      "description": "Custom database architecture, user authentication, customer dashboards, and API integrations."
+    }
+  ],
+  "addOns": [
+    {
+      "name": "Additional Custom Web Page",
+      "price": "₹800 / page",
+      "description": "Extra service, product, or landing page formatted and SEO-optimized."
+    },
+    {
+      "name": "Professional Logo & Favicon Design",
+      "price": "₹1,500",
+      "description": "Custom vector logo with 3 initial concepts, favicon, and brand color palette."
+    },
+    {
+      "name": "Tamil Language Version (தமிழ்)",
+      "price": "₹2,500",
+      "description": "Fully translated bilingual setup with correct hreflang tags for local Tamil audience."
+    },
+    {
+      "name": "SEO Content Writing (500-700 words/page)",
+      "price": "₹1,500 / page",
+      "description": "Conversion-focused, keyword-optimized copy tailored to Coimbatore searchers."
+    },
+    {
+      "name": "Monthly Website Maintenance & Security AMC",
+      "price": "₹1,500 / month",
+      "description": "Weekly automated backups, security patching, uptime monitoring, and 2 hours of updates."
+    },
+    {
+      "name": "Domain & Business Cloud Hosting Setup",
+      "price": "₹999 (one-time)",
+      "description": "DNS configuration, SSL certificate installation, and business email (@yourdomain.com) setup."
+    }
+  ],
+  "budgetRanges": [
+    { "value": "under_5k", "label": "Under ₹5,000 (Consultation/Add-on)" },
+    { "value": "5k_10k", "label": "₹5,000 - ₹10,000 (Starter / Business / Growth)" },
+    { "value": "10k_25k", "label": "₹10,000 - ₹25,000 (Growth + Custom Add-ons)" },
+    { "value": "25k_plus", "label": "₹25,000+ (E-Commerce / Custom Web App)" },
+    { "value": "not_sure", "label": "Not sure yet (Need recommendation)" }
+  ],
+  "paymentTerms": "50% advance to initiate project design and architecture, 50% upon successful testing and final deployment to client domain.",
+  "ownership": "100% intellectual property and code ownership is transferred to the client upon final payment receipt."
+}

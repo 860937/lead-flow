@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads Management Dashboard | Lead Flow Coimbatore</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="admin-dashboard-body">
+  <!-- Admin Header -->
+  <header class="admin-topbar">
+    <div class="admin-brand">
+      <img src="/assets/logo.svg" alt="Lead Flow Logo" width="140" height="30">
+      <span class="badge-role">Admin Portal</span>
+    </div>
+    <div class="admin-actions">
+      <span id="admin-user-display" class="admin-user">admin</span>
+      <a href="/" target="_blank" class="btn btn-secondary btn-sm">View Website ↗</a>
+      <button id="logout-btn" class="btn btn-secondary btn-sm">Log Out</button>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="admin-container">
+    <div class="dashboard-header">
+      <div>
+        <h1>Lead Flow Inquiries & CRM</h1>
+        <p class="text-muted">Real-time leads captured from Coimbatore and Indian prospective clients.</p>
+      </div>
+      <div class="dashboard-top-btns">
+        <a href="/api/admin/export-csv" class="btn btn-teal btn-sm" id="btn-export-csv" download>
+          📥 Export Leads to CSV
+        </a>
+        <button id="btn-refresh" class="btn btn-primary btn-sm">
+          🔄 Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Metrics Cards -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-num" id="stat-total">0</div>
+        <div class="metric-desc">Total Inquiries</div>
+      </div>
+      <div class="metric-card metric-new">
+        <div class="metric-num" id="stat-new">0</div>
+        <div class="metric-desc">New Leads</div>
+      </div>
+      <div class="metric-card metric-contacted">
+        <div class="metric-num" id="stat-contacted">0</div>
+        <div class="metric-desc">Contacted</div>
+      </div>
+      <div class="metric-card metric-qualified">
+        <div class="metric-num" id="stat-qualified">0</div>
+        <div class="metric-desc">Qualified / Won</div>
+      </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="status-filter">Status:</label>
+        <select id="status-filter" class="form-control" style="width: 160px; padding: 8px 12px;">
+          <option value="all">All Statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="qualified">Qualified</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+
+      <div class="filter-group" style="flex-grow: 1; max-width: 400px;">
+        <input type="text" id="search-input" class="form-control" placeholder="Search by name, phone, or company..." style="padding: 8px 14px;">
+      </div>
+    </div>
+
+    <!-- Leads Table -->
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="leads-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Client & Company</th>
+              <th>Contact & Quick Reply</th>
+              <th>Service</th>
+              <th>Budget</th>
+              <th>Project Details</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="leads-tbody">
+            <tr>
+              <td colspan="8" class="text-center" style="padding: 40px;">Loading leads...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

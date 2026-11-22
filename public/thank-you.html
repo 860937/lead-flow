@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You for Contacting Lead Flow | Coimbatore</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="/" class="brand-logo">
+        <img src="/assets/logo.svg" alt="Lead Flow Logo" width="160" height="36">
+      </a>
+      <div class="nav-actions">
+        <a href="tel:+917604894572" class="btn btn-secondary btn-sm">📞 Call +91 76048 94572</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" style="min-height: 70vh; display: flex; align-items: center;">
+    <div class="container container-narrow section text-center">
+      <div style="width: 80px; height: 80px; border-radius: var(--radius-full); background: rgba(16, 185, 129, 0.1); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 20px;">
+        ✓
+      </div>
+
+      <h1 class="section-title">Thank You, <span id="lead-client-name">Friend</span>!</h1>
+      <p class="section-subtitle" style="margin-left: auto; margin-right: auto; font-size: 1.15rem; line-height: 1.6;">
+        Your inquiry has been successfully captured by our Coimbatore technical team. We will review your project details and connect with you within <strong>2 business hours</strong>.
+      </p>
+
+      <!-- High-Conversion Fast-Track WhatsApp CTA -->
+      <div style="background: var(--surface); border: 2px solid var(--whatsapp-green); border-radius: var(--radius-lg); padding: 32px 24px; max-width: 580px; margin: 30px auto; box-shadow: var(--shadow-lg);">
+        <h3 style="font-size: 1.25rem; margin-bottom: 8px; color: var(--text-main);">Want a faster reply?</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+          Skip the email queue! Chat directly with our lead web developer on WhatsApp right now.
+        </p>
+        <a id="btn-fast-wa" href="https://wa.me/917604894572?text=Hi%20Lead%20Flow%2C%20I%20just%20submitted%20a%20quote%20request%20on%20your%20website"
+           target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg" style="width: 100%;">
+          💬 Message Us Directly on WhatsApp
+        </a>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+        <a href="/" class="btn btn-secondary">Return to Homepage</a>
+        <a href="/portfolio.html" class="btn btn-secondary">Explore Our Case Studies</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container text-center" style="font-size: 0.85rem; color: #94A3B8;">
+      © 2026 Lead Flow • Cross Cut Road, Gandhipuram, Coimbatore 641012 • Phone: +91 76048 94572
+    </div>
+  </footer>
+
+  <script src="/js/config.js"></script>
+  <script>
+    // Personalize greeting with name parameter from lead-form redirect
+    document.addEventListener('DOMContentLoaded', function () {
+      var params = new URLSearchParams(window.location.search);
+      var name = params.get('name');
+      var service = params.get('service');
+      if (name) {
+        document.getElementById('lead-client-name').textContent = name;
+      }
+      if (service) {
+        var fastBtn = document.getElementById('btn-fast-wa');
+        var waMsg = "Hi Lead Flow, my name is " + (name || 'a client') + " and I just submitted a quote request for " + service + ".";
+        fastBtn.href = "https://wa.me/917604894572?text=" + encodeURIComponent(waMsg);
+      }
+    });
+  </script>
+</body>
+</html>

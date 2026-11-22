@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api
+Disallow: /api/
+Disallow: /thank-you.html
+
+Sitemap: https://leadflow.co.in/sitemap.xml

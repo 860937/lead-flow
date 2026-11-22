@@ -1,0 +1,33 @@
+{
+  "name": "lead-flow",
+  "version": "1.0.0",
+  "description": "Production-ready website for Lead Flow - Web Development Agency in Coimbatore, Tamil Nadu",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js",
+    "test": "node -e \"console.log('No tests specified')\""
+  },
+  "keywords": [
+    "coimbatore",
+    "web-development",
+    "lead-generation",
+    "seo",
+    "tamil-nadu"
+  ],
+  "author": "Lead Flow",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^11.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^8.0.1",
+    "validator": "^13.15.26"
+  }
+}
