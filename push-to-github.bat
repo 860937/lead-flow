@@ -1,33 +1,42 @@
 @echo off
-set "PATH=%LOCALAPPDATA%\MinGit\cmd;C:\nodejs\node-v20.11.1-win-x64;%PATH%"
+setlocal
+set "PATH=%LOCALAPPDATA%\MinGit\cmd;C:\Users\Suganthmuthu\AppData\Local\Microsoft\WinGet\Packages\GitHub.cli_Microsoft.Winget.Source_8wekyb3d8bbwe\bin;C:\nodejs\node-v20.11.1-win-x64;%PATH%"
+
 echo =======================================================
-echo Push Lead Flow to GitHub
+echo        Push Lead Flow to GitHub (860937/lead-flow)
 echo =======================================================
 echo.
-set /p REPO_URL="Enter your GitHub repository URL (e.g. https://github.com/yourname/lead-flow.git): "
-if "%REPO_URL%"=="" (
-    echo No URL provided. Aborting.
-    pause
-    exit /b 1
-)
 
 git remote remove origin 2>nul
-git remote add origin %REPO_URL%
+git remote add origin https://github.com/860937/lead-flow.git
 git branch -M main
+
+echo Checking GitHub login status...
+gh auth status >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo Please log in to your GitHub account (860937):
+    echo (A browser window will open to authenticate)
+    gh auth login -w -p https
+)
+
 echo.
-echo Pushing to GitHub main branch...
+echo Configuring Git credentials...
+gh auth setup-git
+
+echo.
+echo Pushing project to https://github.com/860937/lead-flow.git ...
 git push -u origin main
 
 if %ERRORLEVEL% EQU 0 (
     echo.
     echo =======================================================
-    echo Successfully pushed to GitHub!
+    echo  SUCCESS! Your code is now live on GitHub:
+    echo  https://github.com/860937/lead-flow
     echo =======================================================
 ) else (
     echo.
-    echo [Notice] Push failed. Make sure:
-    echo 1. The GitHub repository exists and is empty.
-    echo 2. You are logged into GitHub or entered your Personal Access Token.
+    echo [Notice] Push encountered an issue. Please verify your permissions.
 )
 
 pause
