@@ -157,7 +157,7 @@
     submitBtn.disabled = true;
     submitBtn.innerHTML = '⏳ Submitting Your Request...';
 
-    // Submit to Express backend API
+    // Submit to Express / Vercel API
     fetch('/api/leads', {
       method: 'POST',
       headers: {
@@ -167,7 +167,13 @@
       body: JSON.stringify(payload)
     })
       .then(function (res) {
-        return res.json().then(function (data) {
+        return res.text().then(function (text) {
+          var data = {};
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            data = { rawText: text };
+          }
           return { status: res.status, data: data };
         });
       })
@@ -188,14 +194,18 @@
         } else {
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalBtnText;
-          showError(feedbackEl, resObj.data.message || 'Error submitting quote. Please check your details.');
+          var errorMsg = resObj.data.message ||
+                         resObj.data.error ||
+                         (resObj.data.errors && resObj.data.errors[0]) ||
+                         (resObj.status >= 400 ? 'Server error (' + resObj.status + '). Please try again or message us on WhatsApp.' : 'Error submitting quote. Please check your details.');
+          showError(feedbackEl, errorMsg);
         }
       })
       .catch(function (err) {
         console.error('[FormSubmit] Error:', err);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
-        showError(feedbackEl, 'Network error. Please try again or message us directly on WhatsApp (+91 76048 94572).');
+        showError(feedbackEl, 'Network connection issue. Please try again or message us directly on WhatsApp (+91 76048 94572).');
       });
   }
 

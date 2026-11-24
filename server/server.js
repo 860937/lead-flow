@@ -60,7 +60,9 @@ app.get('/api/health', (req, res) => {
 // 6. Mount API Routes with Rate Limiting
 app.use('/api', apiLimiter);
 app.use('/api', leadsRouter);
+app.use('/', leadsRouter); // Support serverless environments where /api is stripped
 app.use('/api/admin', adminRouter);
+app.use('/admin', adminRouter);
 
 // 7. Protect /admin/ dashboard HTML route
 app.get('/admin', requireAdminAuth, (req, res) => {
